@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import "./App.css";
+import { data } from './data'
 
 class App extends Component {
   constructor(){
     super()
-    let data = [
-      { year: 1999, event: 'road to jux' },
-      { year: 2000, event: 'birth of time' },
-      { year: 2001, event: 'if only she had accepted him' },
-      { year: 2002, event: 'The last of the Rich' },
-      { year: 2003, event: 'Didnt she like it?' },
-    ]
     let years = []
     data.forEach(item => {
       years.push(item.year)
@@ -21,7 +15,7 @@ class App extends Component {
       onBoard: [
         { year: years[0] - 1, event: 'Genesis' },
         { year: years[years.length - 1] - ((years[years.length - 1] - years[0]) / 2), event: 'The Center of Time' },
-        { year: years[years.length - 1] + 1, event: 'The Apocalypse' },
+        { year: years[years.length - 1], event: 'The Apocalypse' },
       ],
       hold: {},
     }
@@ -46,10 +40,10 @@ class App extends Component {
     const { hold, onBoard } = this.state
     let boardTemp = onBoard.slice()
     boardTemp = boardTemp.map(item => {
-      item.selected = false
+      item.previousAnswer = false
       return item
     })
-    boardTemp.push({...hold, selected: true})
+    boardTemp.push({...hold, previousAnswer: true})
     this.setState({
       onBoard: boardTemp.sort(this.keysrt('year')),
       hold: {},
@@ -67,9 +61,10 @@ class App extends Component {
       <div className="App">
         <h2>????: {hold.event}</h2>
         <ol>
-          {onBoard.map((item, index) => <li className={item.selected ? 'green' : ''} key={index} onMouseOver={_=>console.log(item.year)}>{item.year}: {item.event}</li>)}
+          {onBoard.map((item, index) => <li className={item.previousAnswer ? 'green' : ''} key={index}>{item.year}: {item.event}</li>)}
         </ol>
         <button onClick={this.moveHoldToBoard.bind(this)}>Clikc</button>
+        <button onClick={this.moveEventToHold.bind(this)}>Dump</button>
       </div>
     )
   }
