@@ -58,13 +58,12 @@ class App extends Component {
   render() {
     const { onBoard, hold } = this.state
     return (
-      <div className="App">
-        <h2>????: {hold.event}</h2>
+      <div onClick={this.moveHoldToBoard.bind(this)} className="App">
+        
+        <h2>????: {hold.event}</h2><button onClick={this.moveEventToHold.bind(this)}>Skip</button>
         <ol>
           {onBoard.map((item, index) => <li className={item.previousAnswer ? 'green' : ''} key={index}>{item.year}: {item.event}</li>)}
         </ol>
-        <button onClick={this.moveHoldToBoard.bind(this)}>Clikc</button>
-        <button onClick={this.moveEventToHold.bind(this)}>Dump</button>
       </div>
     )
   }
