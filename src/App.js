@@ -5,11 +5,7 @@ import { data } from './data'
 class App extends Component {
   constructor(){
     super()
-    let years = []
-    data.forEach(item => {
-      years.push(item.year)
-    })
-    years.sort()
+    const years = data.map(item => item.year).sort()
     this.state = {
       data,
       onBoard: [
