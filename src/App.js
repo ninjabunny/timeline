@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from 'axios'
 import "./App.css";
 import { data } from './data'
 
@@ -14,6 +15,7 @@ class App extends Component {
         { year: years[years.length - 1], event: 'The Apocalypse' },
       ],
       hold: {},
+      image: ''
     }
   }
   componentWillMount(){
@@ -26,6 +28,25 @@ class App extends Component {
     let tempData = data.slice()
     const hold = tempData[rand]
     tempData.splice(rand, 1)
+    axios.defaults.headers["Api-Key"] = 'z4exuesmqgyfvv6kjyfky7nm'
+    axios.get('https://api.gettyimages.com/v3/search/images?phrase=' + hold.event)
+    .then(res => {
+      if (res.data.images.length > 0){
+        this.setState({
+          data: tempData,
+          hold,
+          image: res.data.images[0].display_sizes[0].uri,
+        })
+      } else {
+        this.setState({
+          data: tempData,
+          hold,
+          image: '',
+        })
+      }
+    })
+
+
     this.setState({
       data: tempData,
       hold,
@@ -55,10 +76,12 @@ class App extends Component {
   }
 
   render() {
-    const { onBoard, hold } = this.state
+    const { onBoard, hold, image } = this.state
+
     return (
       <div className="App">
         <h2>????: {hold.event}</h2><button onClick={this.skip.bind(this)}>Skip</button>
+        <img alt='No Pix' src={image} />
         <ol onClick={this.moveHoldToBoard.bind(this)}>
           {onBoard.map((item, index) => <li className={item.previousAnswer ? 'green' : ''} key={index}>{item.year}: {item.event}</li>)}
         </ol>
