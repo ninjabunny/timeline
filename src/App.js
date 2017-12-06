@@ -24,7 +24,7 @@ class App extends Component {
     this.moveEventToHold()
   }
 
-  moveEventToHold() {
+  moveEventToHold(e) {
     const { data } = this.state
     let rand = Math.floor((Math.random() * data.length))
     let tempData = data.slice()
@@ -34,6 +34,13 @@ class App extends Component {
       data: tempData,
       hold,
     })
+    
+  }
+  
+  skip(){
+    const { hold } = this.state
+    alert(hold.year + ' ' + hold.event)
+    this.moveEventToHold()
   }
 
   moveHoldToBoard(){
@@ -45,23 +52,18 @@ class App extends Component {
     })
     boardTemp.push({...hold, previousAnswer: true})
     this.setState({
-      onBoard: boardTemp.sort(this.keysrt('year')),
+      onBoard: boardTemp.sort((obj1, obj2) => obj1['year'] - obj2['year']),
       hold: {},
     })
     this.moveEventToHold()
   }
 
-  keysrt(key, desc) {
-    return (a,b) => desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key])
-  }
-
   render() {
     const { onBoard, hold } = this.state
     return (
-      <div onClick={this.moveHoldToBoard.bind(this)} className="App">
-        
-        <h2>????: {hold.event}</h2><button onClick={this.moveEventToHold.bind(this)}>Skip</button>
-        <ol>
+      <div className="App">
+        <h2>????: {hold.event}</h2><button onClick={this.skip.bind(this)}>Skip</button>
+        <ol onClick={this.moveHoldToBoard.bind(this)}>
           {onBoard.map((item, index) => <li className={item.previousAnswer ? 'green' : ''} key={index}>{item.year}: {item.event}</li>)}
         </ol>
       </div>
